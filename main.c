@@ -41,7 +41,27 @@ int main(){
 //{  0    1   0 0... }
 //{ ...   0 ... 1... }
 //{  0    0   0 0...1}
-void ConstructRotMat(int theta, int mat[N][N]){
+// dir = 0 is left; dir = 1 is right;
+void ConstructRotMat(int theta, int mat[N][N], int direction){
+    int i, j;
+    // set diagonal to 1
+    for(i = 0; i < N; i++) {
+        for(j = 0; j < N; j++) {
+            if(i == j) {
+                mat[i][j] = 1;
+            }
+        }
+    }
+    // set rotation matrix
+    mat[0][0] = Cos(theta);
+    mat[1][1] = Cos(theta);
+    if(direction === 0) {
+        mat[0][1] = Sin(theta);
+        mat[1][0] = -1 * Sin(theta);
+    } else {
+        mat[0][1] = -1 * Sin(theta);
+        mat[1][0] = Sin(theta);
+    }
 }
 
 //multiply M1 by M2 and store the result in product. Product will most likely point to M1 or M2 to be careful
