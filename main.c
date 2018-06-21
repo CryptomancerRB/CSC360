@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <limits.h>
 
 #define N 4
 
@@ -53,10 +54,14 @@ void MatrixMultiply(int M1[N][N], int M2[N][N], int product[N][N]){
 //calculate thetaSum arctan((a+b)/(c+d)) and thetaDiff((a-b)/(c+d))
 //calculate thetaL (thetaSum+thetaDiff)>>1 and thetaR (thetaSum-thetaDiff)>>1
 //assign them to the pointers thetaL and thetaR
-void CalcTheta(int a,int b,int c,int d,int *thetaL, int *thetaR){
-    *thetaL = Arctan(0);
-    *thetaR = Arctan(0);
-    return;
+void CalcTheta(int a, int b, int c, int d, int *thetaL, int *thetaR) {
+    int thetaSum;
+    int thetaDiff;
+
+    thetaSum = Arctan((a + b) / (c + d));
+    thetaDiff = Arctan((a - b) / (c + d));
+    *thetaL = (thetaSum + thetaDiff) >> 1;
+    *thetaR = (thetaSum - thetaDiff) >> 1;
 }
 
 //return the arctan of the ratio using fixed point arithmetic and the "piecewise linear approximation"
