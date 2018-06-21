@@ -21,7 +21,9 @@ int main(){
     int thetaL = 0;
     int L[N][N];
     int R[N][N];
-    
+
+    int r;
+    int c;
     for(int r = 0; r<N-1; r++){
         for(int c=r+1; c<N; c++){
             CalcTheta(M[r][c-1],M[r][c],M[r+1][c-1],M[r+1][c],&thetaL,&thetaR);
@@ -67,8 +69,20 @@ void ConstructRotMat(int theta, int mat[N][N], int direction){
 
 //multiply M1 by M2 and store the result in product. Product will most likely point to M1 or M2 to be careful
 //I think this is meant to be the dot product for a rotation matrix but please don't quote me
-void MatrixMultiply(int M1[N][N], int M2[N][N], int product[N][N]){
+void MatrixRotateLeft(int r[N][N], int M[N][N]) {
+    int R0[N];
+    int R1[N];
 
+    for(col = 0; col < N; col++) {
+        R0[col] = (r[0][0] * M[0][col]) + (r[0][1] * M[1][col]);
+        R1[col] = (r[1][0] * M[0][col]) + (r[1][1] * M[1][col]);
+    }
+
+    
+    for(col = 0; col < N; col++) {
+        M[0][col] = R0[col];
+        M[1][col] = R1[col];
+    }
 }
 
 //calculate thetaSum arctan((a+b)/(c+d)) and thetaDiff((a-b)/(c+d))
