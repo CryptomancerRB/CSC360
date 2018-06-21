@@ -65,11 +65,11 @@ int Arctan(int ratio){
 }
 
 //return the sin of the ratio using fixed point arithmetic and the "piecewise linear approximation"
-int Sin(int ratio){
+int Sin(int theta){
     return 0;
 }
 
 //return the cos of the ratio using fixed point arithmetic and the "piecewise linear approximation"
-int Cos(int ratio){
+int Cos(int theta){
     return 0;
 }
