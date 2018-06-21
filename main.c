@@ -100,7 +100,17 @@ void CalcTheta(int a, int b, int c, int d, int *thetaL, int *thetaR) {
 
 //return the arctan of the ratio using fixed point arithmetic and the "piecewise linear approximation"
 int Arctan(int ratio){
-    return 0;
+    unsigned int result = 0;
+    if((ratio > 0x400) && (ratio <= 0x800)) {
+        result = 0x527 * ratio + 0x123;
+    } else if((ratio > -0x400) && (ratio <= 0x400)) {
+        result = 0x76C * ratio;
+    } else if((ratio > -0x800) && (ratio <= -0x400)) {
+        result = 0x527 * ratio - 0x123;
+    } else {
+        printf("Hey, you goofed in Arctan(): the ratio isn't within any of our bounds.\n");
+    }
+    return result;
 }
 
 //return the sin of the ratio using fixed point arithmetic and the "piecewise linear approximation"
