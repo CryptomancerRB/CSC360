@@ -20,6 +20,8 @@ void MatrixRotateLeft(int16_t r[N][N], int16_t M[N][N]);
 
 void MatrixRotateRight(int16_t M[N][N], int16_t r[N][N]);
 
+void PerformSVD(int16_t M[N][N]);
+
 int16_t Arctan(int16_t ratio);
 
 int16_t Sin(int16_t ratio);
@@ -58,13 +60,7 @@ void MatrixMultiply(int16_t M1[N][N], int16_t M2[N][N], int16_t MR[N][N]){
 }
 */
 
-
-int main(){
-    //int16_t M[N][N] = {-0x800,0,0,0,0x800,0,0,0,0,0,0,0,0,0,0,0};
-    //int16_t M[N][N] = {0x800,0x750,0x700,0x650,0x600,0x550,0x500,0x450,0x400,0x350,0x300,0x250,0x200,0x150,0x100,0x50};
-    //int16_t M[N][N] = {0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400};
-    int16_t M[N][N] = {0x0E7,-0x042,0x03f,0x054,0x069,0x07f,0x093,-0x0A8,0x0bd,0x7f5,0x0e7,0x0fc,-0x111,0x126,0x13b,-0x150};
-
+void PerformSVD(int16_t M[N][N]){
     int16_t U[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
     int16_t V[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
     int16_t topTR = 0;
@@ -75,36 +71,49 @@ int main(){
     int16_t R[N][N] = {0};
     int16_t TEMP_M[N*N] = {0};
 
-
-
-    int n;
+    volatile int n;
     //printMatrix(M);
-    for(n = 0; n<180000; n++){
-		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
-		CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
+    for(n = 0; n<18; n++){
+        CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
+        CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
 
-		ConstructRotMat(topTL,botTL,L,1);
-		ConstructRotMat(topTR,botTR,R,0);
+        ConstructRotMat(topTL,botTL,L,1);
+        ConstructRotMat(topTR,botTR,R,0);
 
-		MatrixRotateLeft(L,M);
-		MatrixRotateRight(M,R);
+        MatrixRotateLeft(L,M);
+        MatrixRotateRight(M,R);
 
-		TransposeRotMat(L);
-		TransposeRotMat(R);
+        TransposeRotMat(L);
+        TransposeRotMat(R);
 
-		MatrixRotateRight(U,L);
-		MatrixRotateLeft(R,V);
+        MatrixRotateRight(U,L);
+        MatrixRotateLeft(R,V);
 
-		PermMat(U,TEMP_M);
-		PermMat(M,TEMP_M);
-		PermMat(V,TEMP_M);
+        PermMat(U,TEMP_M);
+        PermMat(M,TEMP_M);
+        PermMat(V,TEMP_M);
     }
 
+    //int i;
+    //for(i=0; i<N; i++){
+        //printf("E%d: %x    ",i,M[i][i]);
+    //}
+    //printf("\n");
+
+}
+
+int main(){
+    //int16_t M[N][N] = {-0x800,0,0,0,0x800,0,0,0,0,0,0,0,0,0,0,0};
+    //int16_t M[N][N] = {0x800,0x750,0x700,0x650,0x600,0x550,0x500,0x450,0x400,0x350,0x300,0x250,0x200,0x150,0x100,0x50};
+    //int16_t M[N][N] = {0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400};
+    
     int i;
-    for(i=0; i<N; i++){
-        printf("E%d: %x    ",i,M[i][i]);
+    volatile int q;
+    for(i=0;i<0xffffff;i++){
+        q = i;
+        int16_t M[N][N] = {0x0E7,-0x042,0x03f,0x054,0x069,0x07f,0x093,-0x0A8,0x0bd,0x7f5,0x0e7,0x0fc,-0x111,0x126,0x13b,-0x150};
+        PerformSVD(M);
     }
-    printf("\n");
 
     //int16_t Result1[N][N] = {0};
     //int16_t Result2[N][N] = {0};
