@@ -26,6 +26,7 @@ int16_t Sin(int16_t ratio);
 
 int16_t Cos(int16_t ratio);
 
+/*
 void printMatrix(int16_t M[N][N]){
     int r, c;
     for(r = 0;r<N;r++){
@@ -55,9 +56,10 @@ void MatrixMultiply(int16_t M1[N][N], int16_t M2[N][N], int16_t MR[N][N]){
     }
 
 }
+*/
 
 
-int16_t main(){
+int main(){
     //int16_t M[N][N] = {-0x800,0,0,0,0x800,0,0,0,0,0,0,0,0,0,0,0};
     //int16_t M[N][N] = {0x800,0x750,0x700,0x650,0x600,0x550,0x500,0x450,0x400,0x350,0x300,0x250,0x200,0x150,0x100,0x50};
     //int16_t M[N][N] = {0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400,0x400};
@@ -75,28 +77,26 @@ int16_t main(){
 
 
     int perm,n;
-    printMatrix(M);
-    for(n = 0; n<6; n++){
-        for(perm = 0; perm<N-1; perm++){
-            CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
-            CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
+    //printMatrix(M);
+    for(n = 0; n<18; n++){
+		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
+		CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
 
-            ConstructRotMat(topTL,botTL,L,1);
-            ConstructRotMat(topTR,botTR,R,0);
+		ConstructRotMat(topTL,botTL,L,1);
+		ConstructRotMat(topTR,botTR,R,0);
 
-            MatrixRotateLeft(L,M);
-            MatrixRotateRight(M,R);
+		MatrixRotateLeft(L,M);
+		MatrixRotateRight(M,R);
 
-            TransposeRotMat(L);
-            TransposeRotMat(R);
+		TransposeRotMat(L);
+		TransposeRotMat(R);
 
-            MatrixRotateRight(U,L);
-            MatrixRotateLeft(R,V);
+		MatrixRotateRight(U,L);
+		MatrixRotateLeft(R,V);
 
-            PermMat(U);
-            PermMat(M);
-            PermMat(V);
-        }
+		PermMat(U);
+		PermMat(M);
+		PermMat(V);
     }
 
     int i;
@@ -290,8 +290,6 @@ int16_t Arctan(int16_t ratio){
     } else if((ratio >= -0x800) && (ratio < -0x400)) {
         result = (0x527 * ratio);
         result -= 0x123<<11;
-    } else {
-        printf("Arc error: %2.3f (%4x)\n",(double)ratio/(double)0x800,ratio);
     }
     re = result >> 11;
     return re;

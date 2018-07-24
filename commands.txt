@@ -1,0 +1,11 @@
+#generate mapping
+/opt/arm/4.3.2/bin/arm-linux-gcc -marm -Wa,-adhln -g -static -o svd.exe main.c > mapping.s
+
+#generate assembly
+/opt/arm/4.3.2/bin/arm-linux-gcc -marm -S -static -o svd.exe main.c
+
+#complie to exe
+/opt/arm/4.3.2/bin/arm-linux-gcc -marm -static -o svd.exe main.c
+
+#run
+/opt/arm/4.3.2/bin/qemu-arm svd.exe
