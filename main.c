@@ -8,7 +8,7 @@
 #define N 4
 #define M_SIZE sizeof(int16_t)*N*N
 
-void PermMat(int16_t M[N][N]);
+void PermMat(int16_t M[N][N],int16_t Mprime[N*N]);
 
 void TransposeRotMat(int16_t mat[N][N]);
 
@@ -73,12 +73,13 @@ int main(){
     int16_t botTL = 0;
     int16_t L[N][N] = {0};
     int16_t R[N][N] = {0};
+    int16_t TEMP_M[N*N] = {0};
 
 
 
-    int perm,n;
+    int n;
     //printMatrix(M);
-    for(n = 0; n<18; n++){
+    for(n = 0; n<180000; n++){
 		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
 		CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
 
@@ -94,9 +95,9 @@ int main(){
 		MatrixRotateRight(U,L);
 		MatrixRotateLeft(R,V);
 
-		PermMat(U);
-		PermMat(M);
-		PermMat(V);
+		PermMat(U,TEMP_M);
+		PermMat(M,TEMP_M);
+		PermMat(V,TEMP_M);
     }
 
     int i;
@@ -128,9 +129,11 @@ void TransposeRotMat(int16_t mat[N][N]){
     mat[N-1][N-2] = -1*(mat[N-1][N-2]);
 }
 
-void PermMat(int16_t M[N][N]){
-    int16_t *Mprime = malloc(M_SIZE);
+void PermMat(int16_t M[N][N],int16_t Mprime[N*N]){
+    //int16_t *Mprime = malloc(M_SIZE);
     int r,c;
+
+    //potential for memory access improvement
 
     //perm columns
     for(r = 0; r<N; r++){
@@ -281,6 +284,7 @@ void CalcTheta(int16_t a, int16_t b, int16_t c, int16_t d, int16_t *thetaL, int1
 
 int16_t Arctan(int16_t ratio){
     int32_t result = 0;
+    int32_t slowBro = 0x800;
     int16_t re;
     if((ratio > 0x400) && (ratio <= 0x800)) {
         result = (0x527 * ratio);

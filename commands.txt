@@ -9,3 +9,10 @@
 
 #run
 /opt/arm/4.3.2/bin/qemu-arm svd.exe
+
+#compile to gprof
+/opt/arm/4.3.2/bin/arm-linux-gcc -marm -static -pg -o svd main.c
+
+#generate report
+gprof -b -p svd gmon.out > prof_output 
+
