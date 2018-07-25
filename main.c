@@ -20,7 +20,7 @@ void MatrixRotateLeft(int16_t r[N][N], int16_t M[N][N]);
 
 void MatrixRotateRight(int16_t M[N][N], int16_t r[N][N]);
 
-void PerformSVD(int16_t M[N][N]);
+void PerformSVD(int16_t M[N][N],int verbose);
 
 int16_t Arctan(int16_t ratio);
 
@@ -60,48 +60,6 @@ void MatrixMultiply(int16_t M1[N][N], int16_t M2[N][N], int16_t MR[N][N]){
 }
 */
 
-void PerformSVD(int16_t M[N][N]){
-    int16_t U[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
-    int16_t V[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
-    int16_t topTR = 0;
-    int16_t topTL = 0;
-    int16_t botTR = 0;
-    int16_t botTL = 0;
-    int16_t L[N][N] = {0};
-    int16_t R[N][N] = {0};
-    int16_t TEMP_M[N*N] = {0};
-
-    volatile int n;
-    //printMatrix(M);
-    for(n = 0; n<18; n++){
-        CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
-        CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
-
-        ConstructRotMat(topTL,botTL,L,1);
-        ConstructRotMat(topTR,botTR,R,0);
-
-        MatrixRotateLeft(L,M);
-        MatrixRotateRight(M,R);
-
-        TransposeRotMat(L);
-        TransposeRotMat(R);
-
-        MatrixRotateRight(U,L);
-        MatrixRotateLeft(R,V);
-
-        PermMat(U,TEMP_M);
-        PermMat(M,TEMP_M);
-        PermMat(V,TEMP_M);
-    }
-
-    //int i;
-    //for(i=0; i<N; i++){
-        //printf("E%d: %x    ",i,M[i][i]);
-    //}
-    //printf("\n");
-
-}
-
 int main(){
     //int16_t M[N][N] = {-0x800,0,0,0,0x800,0,0,0,0,0,0,0,0,0,0,0};
     //int16_t M[N][N] = {0x800,0x750,0x700,0x650,0x600,0x550,0x500,0x450,0x400,0x350,0x300,0x250,0x200,0x150,0x100,0x50};
@@ -109,11 +67,13 @@ int main(){
     
     int i;
     volatile int q;
-    for(i=0;i<0xffffff;i++){
+    for(i=0;i<0xfffff;i++){
         q = i;
         int16_t M[N][N] = {0x0E7,-0x042,0x03f,0x054,0x069,0x07f,0x093,-0x0A8,0x0bd,0x7f5,0x0e7,0x0fc,-0x111,0x126,0x13b,-0x150};
-        PerformSVD(M);
+        PerformSVD(M,0);
     }
+    int16_t M[N][N] = {0x0E7,-0x042,0x03f,0x054,0x069,0x07f,0x093,-0x0A8,0x0bd,0x7f5,0x0e7,0x0fc,-0x111,0x126,0x13b,-0x150};
+    PerformSVD(M,1);
 
     //int16_t Result1[N][N] = {0};
     //int16_t Result2[N][N] = {0};
@@ -131,6 +91,52 @@ int main(){
     return 0;
 }
 
+void PerformSVD(int16_t M[N][N],int verbose){
+	int16_t U[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
+	int16_t V[N][N] = {0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800,0x000,0x000,0x000,0x000,0x800};
+	int16_t topTR = 0;
+	int16_t topTL = 0;
+	int16_t botTR = 0;
+	int16_t botTL = 0;
+	int16_t L[N][N] = {0};
+	int16_t R[N][N] = {0};
+	int16_t TEMP_M[N*N] = {0};
+
+	int n;
+	volatile int q;
+	//printMatrix(M);
+	for(n = 0; n<18; n++){
+		q = n;
+		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
+		CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
+
+		ConstructRotMat(topTL,botTL,L,1);
+		ConstructRotMat(topTR,botTR,R,0);
+
+		MatrixRotateLeft(L,M);
+		MatrixRotateRight(M,R);
+
+		TransposeRotMat(L);
+		TransposeRotMat(R);
+
+		MatrixRotateRight(U,L);
+		MatrixRotateLeft(R,V);
+
+		PermMat(U,TEMP_M);
+		PermMat(M,TEMP_M);
+		PermMat(V,TEMP_M);
+	}
+	
+	if(verbose==1){
+		int i;
+		for(i=0; i<N; i++){
+			printf("E%d: %x    ",i,M[i][i]);
+		}
+		printf("\n");
+	}
+
+}
+
 void TransposeRotMat(int16_t mat[N][N]){
     mat[0][1] = -1*(mat[0][1]);
     mat[1][0] = -1*(mat[1][0]);
@@ -145,21 +151,31 @@ void PermMat(int16_t M[N][N],int16_t Mprime[N*N]){
     //potential for memory access improvement
 
     //perm columns
-    for(r = 0; r<N; r++){
-        for(c = 1; c<N-1; c++){
+    for(r = 0; r<N; r+=2){
+        for(c = 1; c<N-1; c+=2){
             Mprime[(r*N)+c] = M[r][c+1];
+            Mprime[(r*N)+c+1] = M[r][c+2];
+            Mprime[((r+1)*N)+c] = M[(r+1)][c+1];
+            Mprime[((r+1)*N)+c+1] = M[(r+1)][c+2];
         }
         Mprime[(r*N)+N-1] = M[r][1];
         Mprime[(r*N)] = M[r][0];
+        Mprime[((r+1)*N)+N-1] = M[(r+1)][1];
+        Mprime[((r+1)*N)] = M[(r+1)][0];
     }
 
     //perm rows
-    for(c = 0; c<N; c++){
-        for(r = 1; r<N-1; r++){
+    for(c = 0; c<N; c+=2){
+        for(r = 1; r<N-1; r+=2){
             M[r][c] = Mprime[((r+1)*N)+c];
+            M[r+1][c] = Mprime[((r+2)*N)+c];
+            M[r][(c+1)] = Mprime[((r+1)*N)+(c+1)];
+            M[r+1][(c+1)] = Mprime[((r+2)*N)+(c+1)];
         }
         M[N-1][c] = Mprime[N+c];
         M[0][c] = Mprime[c];
+        M[N-1][(c+1)] = Mprime[N+(c+1)];
+        M[0][(c+1)] = Mprime[(c+1)];
     }
 }
 

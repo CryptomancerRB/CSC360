@@ -2,84 +2,93 @@ Flat profile:
 
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
- time   seconds   seconds    calls  ms/call  ms/call  name    
- 42.05      0.74     0.74                             mcount_internal
- 14.20      0.99     0.25                             __gnu_mcount_nc
-  7.95      1.13     0.14        1   140.00   690.00  main
-  6.82      1.25     0.12   360000     0.00     0.00  CalcTheta
-  6.25      1.36     0.11   360000     0.00     0.00  MatrixRotateRight
-  4.55      1.44     0.08                             __aeabi_idiv
-  3.98      1.51     0.07   540000     0.00     0.00  PermMat
-  3.98      1.58     0.07   360000     0.00     0.00  ConstructRotMat
-  2.84      1.63     0.05   360000     0.00     0.00  MatrixRotateLeft
-  2.27      1.67     0.04   720000     0.00     0.00  Cos
-  2.27      1.71     0.04   720000     0.00     0.00  Sin
-  1.70      1.74     0.03   720000     0.00     0.00  Arctan
-  1.14      1.76     0.02   360000     0.00     0.00  TransposeRotMat
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 42.89     80.83    80.83                             mcount_internal
+ 14.61    108.36    27.53                             __gnu_mcount_nc
+  8.69    124.74    16.38 37748736     0.00     0.00  MatrixRotateLeft
+  5.09    134.33     9.59 37748736     0.00     0.00  CalcTheta
+  4.73    143.24     8.91 56623104     0.00     0.00  PermMat
+  4.54    151.79     8.55  1048576     0.00     0.00  PerformSVD
+  4.13    159.57     7.78 37748736     0.00     0.00  MatrixRotateRight
+  4.09    167.28     7.71                             __aeabi_idiv
+  3.51    173.89     6.61 37748736     0.00     0.00  ConstructRotMat
+  2.85    179.26     5.37 75497472     0.00     0.00  Cos
+  2.75    184.45     5.19 75497472     0.00     0.00  Sin
+  1.41    187.10     2.65 75497472     0.00     0.00  Arctan
+  0.55    188.14     1.04 37748736     0.00     0.00  TransposeRotMat
+  0.11    188.34     0.20                             memcpy
+  0.07    188.47     0.13        1     0.13    72.20  main
 
 			Call graph
 
 
-granularity: each sample hit covers 4 byte(s) for 0.57% of 1.76 seconds
+granularity: each sample hit covers 4 byte(s) for 0.01% of 188.47 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     42.0    0.74    0.00                 mcount_internal [1]
+[1]     42.9   80.83    0.00                 mcount_internal [1]
 -----------------------------------------------
-                0.14    0.55       1/1           __libc_start_main [3]
-[2]     39.2    0.14    0.55       1         main [2]
-                0.12    0.03  360000/360000      CalcTheta [5]
-                0.07    0.08  360000/360000      ConstructRotMat [6]
-                0.11    0.00  360000/360000      MatrixRotateRight [7]
-                0.07    0.00  540000/540000      PermMat [9]
-                0.05    0.00  360000/360000      MatrixRotateLeft [10]
-                0.02    0.00  360000/360000      TransposeRotMat [14]
+                0.13   72.07       1/1           __libc_start_main [3]
+[2]     38.3    0.13   72.07       1         main [2]
+                8.55   63.52 1048576/1048576     PerformSVD [4]
 -----------------------------------------------
                                                  <spontaneous>
-[3]     39.2    0.00    0.69                 __libc_start_main [3]
-                0.14    0.55       1/1           main [2]
+[3]     38.3    0.00   72.20                 __libc_start_main [3]
+                0.13   72.07       1/1           main [2]
+-----------------------------------------------
+                8.55   63.52 1048576/1048576     main [2]
+[4]     38.2    8.55   63.52 1048576         PerformSVD [4]
+                6.61   10.56 37748736/37748736     ConstructRotMat [6]
+               16.38    0.00 37748736/37748736     MatrixRotateLeft [7]
+                9.59    2.65 37748736/37748736     CalcTheta [8]
+                8.91    0.00 56623104/56623104     PermMat [9]
+                7.78    0.00 37748736/37748736     MatrixRotateRight [10]
+                1.04    0.00 37748736/37748736     TransposeRotMat [15]
 -----------------------------------------------
                                                  <spontaneous>
-[4]     14.2    0.25    0.00                 __gnu_mcount_nc [4]
+[5]     14.6   27.53    0.00                 __gnu_mcount_nc [5]
 -----------------------------------------------
-                0.12    0.03  360000/360000      main [2]
-[5]      8.5    0.12    0.03  360000         CalcTheta [5]
-                0.03    0.00  720000/720000      Arctan [13]
+                6.61   10.56 37748736/37748736     PerformSVD [4]
+[6]      9.1    6.61   10.56 37748736         ConstructRotMat [6]
+                5.37    0.00 75497472/75497472     Cos [12]
+                5.19    0.00 75497472/75497472     Sin [13]
 -----------------------------------------------
-                0.07    0.08  360000/360000      main [2]
-[6]      8.5    0.07    0.08  360000         ConstructRotMat [6]
-                0.04    0.00  720000/720000      Sin [12]
-                0.04    0.00  720000/720000      Cos [11]
+               16.38    0.00 37748736/37748736     PerformSVD [4]
+[7]      8.7   16.38    0.00 37748736         MatrixRotateLeft [7]
 -----------------------------------------------
-                0.11    0.00  360000/360000      main [2]
-[7]      6.2    0.11    0.00  360000         MatrixRotateRight [7]
+                9.59    2.65 37748736/37748736     PerformSVD [4]
+[8]      6.5    9.59    2.65 37748736         CalcTheta [8]
+                2.65    0.00 75497472/75497472     Arctan [14]
+-----------------------------------------------
+                8.91    0.00 56623104/56623104     PerformSVD [4]
+[9]      4.7    8.91    0.00 56623104         PermMat [9]
+-----------------------------------------------
+                7.78    0.00 37748736/37748736     PerformSVD [4]
+[10]     4.1    7.78    0.00 37748736         MatrixRotateRight [10]
 -----------------------------------------------
                                                  <spontaneous>
-[8]      4.5    0.08    0.00                 __aeabi_idiv [8]
+[11]     4.1    7.71    0.00                 __aeabi_idiv [11]
 -----------------------------------------------
-                0.07    0.00  540000/540000      main [2]
-[9]      4.0    0.07    0.00  540000         PermMat [9]
+                5.37    0.00 75497472/75497472     ConstructRotMat [6]
+[12]     2.8    5.37    0.00 75497472         Cos [12]
 -----------------------------------------------
-                0.05    0.00  360000/360000      main [2]
-[10]     2.8    0.05    0.00  360000         MatrixRotateLeft [10]
+                5.19    0.00 75497472/75497472     ConstructRotMat [6]
+[13]     2.8    5.19    0.00 75497472         Sin [13]
 -----------------------------------------------
-                0.04    0.00  720000/720000      ConstructRotMat [6]
-[11]     2.3    0.04    0.00  720000         Cos [11]
+                2.65    0.00 75497472/75497472     CalcTheta [8]
+[14]     1.4    2.65    0.00 75497472         Arctan [14]
 -----------------------------------------------
-                0.04    0.00  720000/720000      ConstructRotMat [6]
-[12]     2.3    0.04    0.00  720000         Sin [12]
+                1.04    0.00 37748736/37748736     PerformSVD [4]
+[15]     0.6    1.04    0.00 37748736         TransposeRotMat [15]
 -----------------------------------------------
-                0.03    0.00  720000/720000      CalcTheta [5]
-[13]     1.7    0.03    0.00  720000         Arctan [13]
------------------------------------------------
-                0.02    0.00  360000/360000      main [2]
-[14]     1.1    0.02    0.00  360000         TransposeRotMat [14]
+                                                 <spontaneous>
+[16]     0.1    0.20    0.00                 memcpy [16]
 -----------------------------------------------
 
 Index by function name
 
-  [13] Arctan                  [7] MatrixRotateRight       [4] __gnu_mcount_nc
-   [5] CalcTheta               [9] PermMat                 [2] main
-   [6] ConstructRotMat        [12] Sin                     [1] mcount_internal
-  [11] Cos                    [14] TransposeRotMat
-  [10] MatrixRotateLeft        [8] __aeabi_idiv
+  [14] Arctan                 [10] MatrixRotateRight      [11] __aeabi_idiv
+   [8] CalcTheta               [4] PerformSVD              [5] __gnu_mcount_nc
+   [6] ConstructRotMat         [9] PermMat                 [2] main
+  [12] Cos                    [13] Sin                     [1] mcount_internal
+   [7] MatrixRotateLeft       [15] TransposeRotMat        [16] memcpy
