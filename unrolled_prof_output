@@ -1,0 +1,75 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+ no time accumulated
+
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  Ts/call  Ts/call  name    
+  0.00      0.00     0.00       72     0.00     0.00  Arctan
+  0.00      0.00     0.00       72     0.00     0.00  Cos
+  0.00      0.00     0.00       72     0.00     0.00  Sin
+  0.00      0.00     0.00       54     0.00     0.00  PermMat
+  0.00      0.00     0.00       36     0.00     0.00  CalcTheta
+  0.00      0.00     0.00       36     0.00     0.00  ConstructRotMat
+  0.00      0.00     0.00       36     0.00     0.00  MatrixRotateLeft
+  0.00      0.00     0.00       36     0.00     0.00  MatrixRotateRight
+  0.00      0.00     0.00       36     0.00     0.00  TransposeRotMat
+  0.00      0.00     0.00        1     0.00     0.00  PerformSVD
+  0.00      0.00     0.00        1     0.00     0.00  main
+
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) no time propagated
+
+index % time    self  children    called     name
+                0.00    0.00      72/72          CalcTheta [5]
+[1]      0.0    0.00    0.00      72         Arctan [1]
+-----------------------------------------------
+                0.00    0.00      72/72          ConstructRotMat [6]
+[2]      0.0    0.00    0.00      72         Cos [2]
+-----------------------------------------------
+                0.00    0.00      72/72          ConstructRotMat [6]
+[3]      0.0    0.00    0.00      72         Sin [3]
+-----------------------------------------------
+                0.00    0.00      54/54          PerformSVD [10]
+[4]      0.0    0.00    0.00      54         PermMat [4]
+-----------------------------------------------
+                0.00    0.00      36/36          PerformSVD [10]
+[5]      0.0    0.00    0.00      36         CalcTheta [5]
+                0.00    0.00      72/72          Arctan [1]
+-----------------------------------------------
+                0.00    0.00      36/36          PerformSVD [10]
+[6]      0.0    0.00    0.00      36         ConstructRotMat [6]
+                0.00    0.00      72/72          Sin [3]
+                0.00    0.00      72/72          Cos [2]
+-----------------------------------------------
+                0.00    0.00      36/36          PerformSVD [10]
+[7]      0.0    0.00    0.00      36         MatrixRotateLeft [7]
+-----------------------------------------------
+                0.00    0.00      36/36          PerformSVD [10]
+[8]      0.0    0.00    0.00      36         MatrixRotateRight [8]
+-----------------------------------------------
+                0.00    0.00      36/36          PerformSVD [10]
+[9]      0.0    0.00    0.00      36         TransposeRotMat [9]
+-----------------------------------------------
+                0.00    0.00       1/1           main [11]
+[10]     0.0    0.00    0.00       1         PerformSVD [10]
+                0.00    0.00      54/54          PermMat [4]
+                0.00    0.00      36/36          CalcTheta [5]
+                0.00    0.00      36/36          ConstructRotMat [6]
+                0.00    0.00      36/36          MatrixRotateRight [8]
+                0.00    0.00      36/36          MatrixRotateLeft [7]
+                0.00    0.00      36/36          TransposeRotMat [9]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_start_main [671]
+[11]     0.0    0.00    0.00       1         main [11]
+                0.00    0.00       1/1           PerformSVD [10]
+-----------------------------------------------
+
+Index by function name
+
+   [1] Arctan                  [7] MatrixRotateLeft        [3] Sin
+   [5] CalcTheta               [8] MatrixRotateRight       [9] TransposeRotMat
+   [6] ConstructRotMat        [10] PerformSVD             [11] main
+   [2] Cos                     [4] PermMat

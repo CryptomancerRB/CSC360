@@ -75,16 +75,6 @@ int main(){
     int16_t M[N][N] = {0x0E7,-0x042,0x03f,0x054,0x069,0x07f,0x093,-0x0A8,0x0bd,0x7f5,0x0e7,0x0fc,-0x111,0x126,0x13b,-0x150};
     PerformSVD(M,1);
 
-    //int16_t Result1[N][N] = {0};
-    //int16_t Result2[N][N] = {0};
-
-    //printMatrix(U);
-    //printMatrix(M);
-    //printMatrix(V);
-
-    //MatrixMultiply(U,M,Result1);
-    //MatrixMultiply(Result1,V,Result2);
-    //printMatrix(Result2);
     
     
 
@@ -104,7 +94,6 @@ void PerformSVD(int16_t M[N][N],int verbose){
 
 	int n;
 	volatile int q;
-	//printMatrix(M);
 	for(n = 0; n<18; n++){
 		q = n;
 		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
@@ -113,14 +102,14 @@ void PerformSVD(int16_t M[N][N],int verbose){
 		ConstructRotMat(topTL,botTL,L,1);
 		ConstructRotMat(topTR,botTR,R,0);
 
-		MatrixRotateLeft(L,M);
 		MatrixRotateRight(M,R);
+		MatrixRotateLeft(L,M);
 
 		TransposeRotMat(L);
 		TransposeRotMat(R);
 
-		MatrixRotateRight(U,L);
 		MatrixRotateLeft(R,V);
+		MatrixRotateRight(U,L);
 
 		PermMat(U,TEMP_M);
 		PermMat(M,TEMP_M);
@@ -133,22 +122,34 @@ void PerformSVD(int16_t M[N][N],int verbose){
 			printf("E%d: %x    ",i,M[i][i]);
 		}
 		printf("\n");
+		//int16_t Result1[N][N] = {0};
+		//int16_t Result2[N][N] = {0};
+
+		//printMatrix(U);
+		//printMatrix(M);
+		//printMatrix(V);
+
+		//MatrixMultiply(U,M,Result1);
+		//MatrixMultiply(Result1,V,Result2);
+		//printMatrix(Result2);
 	}
 
 }
 
 void TransposeRotMat(int16_t mat[N][N]){
-    mat[0][1] = -1*(mat[0][1]);
-    mat[1][0] = -1*(mat[1][0]);
-    mat[N-2][N-1] = -1*(mat[N-2][N-1]);
-    mat[N-1][N-2] = -1*(mat[N-1][N-2]);
+    //mat[0][1] = -1*(mat[0][1]);
+    //mat[1][0] = -1*(mat[1][0]);
+    //mat[N-2][N-1] = -1*(mat[N-2][N-1]);
+    //mat[N-1][N-2] = -1*(mat[N-1][N-2]);
+    mat[0][1] = (~mat[0][1])+1;
+    mat[1][0] =  (~mat[1][0])+1;
+    mat[N-2][N-1] = (~mat[N-2][N-1])+1;
+    mat[N-1][N-2] = (~mat[N-1][N-2])+1;
 }
 
 void PermMat(int16_t M[N][N],int16_t Mprime[N*N]){
     //int16_t *Mprime = malloc(M_SIZE);
     int r,c;
-
-    //potential for memory access improvement
 
     //perm columns
     for(r = 0; r<N; r+=2){
@@ -209,20 +210,32 @@ void MatrixRotateLeft(int16_t r[N][N], int16_t M[N][N]){
     int32_t RB1[N];
     int col;
 
-    for(col = 0; col < N; col++) {
+    for(col = 0; col < N; col+=2) {
         RT0[col] = (r[0][0] * M[0][col]) + (r[0][1] * M[1][col]);
         RT1[col] = (r[1][0] * M[0][col]) + (r[1][1] * M[1][col]);
 
         RB0[col] = (r[N-2][N-2] * M[N-2][col]) + (r[N-2][N-1] * M[N-1][col]);
         RB1[col] = (r[N-1][N-2] * M[N-2][col]) + (r[N-1][N-1] * M[N-1][col]);
+
+		RT0[col+1] = (r[0][0] * M[0][col+1]) + (r[0][1] * M[1][col+1]);
+		RT1[col+1] = (r[1][0] * M[0][col+1]) + (r[1][1] * M[1][col+1]);
+
+		RB0[col+1] = (r[N-2][N-2] * M[N-2][col+1]) + (r[N-2][N-1] * M[N-1][col+1]);
+		RB1[col+1] = (r[N-1][N-2] * M[N-2][col+1]) + (r[N-1][N-1] * M[N-1][col+1]);
     }
     
-    for(col = 0; col < N; col++) {
+    for(col = 0; col < N; col+=2) {
         M[0][col] = RT0[col]>>11;
         M[1][col] = RT1[col]>>11;
 
         M[N-2][col] = RB0[col]>>11;
         M[N-1][col] = RB1[col]>>11;
+
+		M[0][col+1] = RT0[col+1]>>11;
+		M[1][col+1] = RT1[col+1]>>11;
+		
+		M[N-2][col+1] = RB0[col+1]>>11;
+		M[N-1][col+1] = RB1[col+1]>>11;
     }
 
 }
@@ -234,21 +247,33 @@ void MatrixRotateRight(int16_t M[N][N], int16_t r[N][N]) {
     int32_t CB1[N];
     int row;
 
-    for(row = 0; row < N; row++) {
+    for(row = 0; row < N; row+=2) {
         CT0[row] = (M[row][0] * r[0][0]) + (M[row][1] * r[1][0]);
         CT1[row] = (M[row][0] * r[0][1]) + (M[row][1] * r[1][1]);
 
         CB0[row] = (M[row][N-2] * r[N-2][N-2]) + (M[row][N-1] * r[N-1][N-2]);
         CB1[row] = (M[row][N-2] * r[N-2][N-1]) + (M[row][N-1] * r[N-1][N-1]);
+
+		CT0[row+1] = (M[row+1][0] * r[0][0]) + (M[row+1][1] * r[1][0]);
+		CT1[row+1] = (M[row+1][0] * r[0][1]) + (M[row+1][1] * r[1][1]);
+
+		CB0[row+1] = (M[row+1][N-2] * r[N-2][N-2]) + (M[row+1][N-1] * r[N-1][N-2]);
+        CB1[row+1] = (M[row+1][N-2] * r[N-2][N-1]) + (M[row+1][N-1] * r[N-1][N-1]);
     }
     
-    for(row = 0; row < N; row++) {
+    for(row = 0; row < N; row+=2) {
         M[row][0] = CT0[row]>>11;
         M[row][1] = CT1[row]>>11;
 
         M[row][N-2] = CB0[row]>>11;
         M[row][N-1] = CB1[row]>>11;
-    }
+
+		M[row+1][0] = CT0[row+1]>>11;
+        M[row+1][1] = CT1[row+1]>>11;
+
+        M[row+1][N-2] = CB0[row+1]>>11;
+        M[row+1][N-1] = CB1[row+1]>>11;
+  }
 }
 
 void CalcTheta(int16_t a, int16_t b, int16_t c, int16_t d, int16_t *thetaL, int16_t *thetaR) {
