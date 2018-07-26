@@ -8,7 +8,7 @@
 #define N 4
 #define M_SIZE sizeof(int16_t)*N*N
 
-void PermMat(int16_t M[N][N],int16_t Mprime[N*N]);
+void PermMat(int16_t M[N][N]);
 
 void TransposeRotMat(int16_t mat[N][N]);
 
@@ -94,13 +94,12 @@ void PerformSVD(int16_t M[N][N],int verbose){
 	int16_t botTL = 0;
 	int16_t L[N][N] = {0};
 	int16_t R[N][N] = {0};
-	int16_t TEMP_M[N*N] = {0};
 
 	int n;
-	int iter = 6;
 	volatile int q;
 	//printMatrix(M);
-	for(n = 0; n<3*iter; n++){
+	//for(n = 0; n<18; n++){
+	for(n = 18; n!=0; n--){
 		q = n;
 		CalcTheta(M[0][0],M[0][1],M[1][0],M[1][1],&topTL,&topTR);
 		CalcTheta(M[N-2][N-2],M[N-2][N-1],M[N-1][N-2],M[N-1][N-1],&botTL,&botTR);
@@ -117,9 +116,9 @@ void PerformSVD(int16_t M[N][N],int verbose){
 		MatrixRotateLeft(R,V);
 		MatrixRotateRight(U,L);
 
-		PermMat(U,TEMP_M);
-		PermMat(M,TEMP_M);
-		PermMat(V,TEMP_M);
+		PermMat(U);
+		PermMat(M);
+		PermMat(V);
 	}
 	
 	if(verbose==1){
@@ -159,52 +158,44 @@ void PerformSVD(int16_t M[N][N],int verbose){
 
 void TransposeRotMat(int16_t mat[N][N]){
 	int16_t *TEMP_mat = *mat;
-    //mat[0][1] = -1*(mat[0][1]);
-    //mat[1][0] = -1*(mat[1][0]);
-    //mat[N-2][N-1] = -1*(mat[N-2][N-1]);
-    //mat[N-1][N-2] = -1*(mat[N-1][N-2]);
-    
-    //mat[0][1] = (~mat[0][1])+1;
-    //mat[1][0] =  (~mat[1][0])+1;
-    //mat[N-2][N-1] = (~mat[N-2][N-1])+1;
-    //mat[N-1][N-2] = (~mat[N-1][N-2])+1;
-    
     *(TEMP_mat+1) = (~*(TEMP_mat+1))+1;
     *(TEMP_mat+N) = (~*(TEMP_mat+N))+1;
     *(TEMP_mat+(N*(N-1)-1)) = (~*(TEMP_mat+(N*(N-1)-1)))+1;
     *(TEMP_mat+(N*N)-2) = (~*(TEMP_mat+(N*N)-2))+1;
 }
 
-void PermMat(int16_t M[N][N],int16_t Mprime[N*N]){
+void PermMat(int16_t M[N][N]){
     int r,c;
+	int16_t TEMP_M [N*N];
 
     //perm columns
     for(r = 0; r<N; r+=2){
         for(c = 1; c<N-1; c+=2){
-            Mprime[(r*N)+c] = M[r][c+1];
-            Mprime[(r*N)+c+1] = M[r][c+2];
-            Mprime[((r+1)*N)+c] = M[(r+1)][c+1];
-            Mprime[((r+1)*N)+c+1] = M[(r+1)][c+2];
+            TEMP_M[(r*N)+c] = M[r][c+1];
+            TEMP_M[(r*N)+c+1] = M[r][c+2];
+            TEMP_M[((r+1)*N)+c] = M[(r+1)][c+1];
+            TEMP_M[((r+1)*N)+c+1] = M[(r+1)][c+2];
         }
-        Mprime[(r*N)+N-1] = M[r][1];
-        Mprime[(r*N)] = M[r][0];
-        Mprime[((r+1)*N)+N-1] = M[(r+1)][1];
-        Mprime[((r+1)*N)] = M[(r+1)][0];
+        TEMP_M[(r*N)+N-1] = M[r][1];
+        TEMP_M[(r*N)] = M[r][0];
+        TEMP_M[((r+1)*N)+N-1] = M[(r+1)][1];
+        TEMP_M[((r+1)*N)] = M[(r+1)][0];
     }
 
     //perm rows
     for(c = 0; c<N; c+=2){
         for(r = 1; r<N-1; r+=2){
-            M[r][c] = Mprime[((r+1)*N)+c];
-            M[r+1][c] = Mprime[((r+2)*N)+c];
-            M[r][(c+1)] = Mprime[((r+1)*N)+(c+1)];
-            M[r+1][(c+1)] = Mprime[((r+2)*N)+(c+1)];
+            M[r][c] = TEMP_M[((r+1)*N)+c];
+            M[r+1][c] = TEMP_M[((r+2)*N)+c];
+            M[r][(c+1)] = TEMP_M[((r+1)*N)+(c+1)];
+            M[r+1][(c+1)] = TEMP_M[((r+2)*N)+(c+1)];
         }
-        M[N-1][c] = Mprime[N+c];
-        M[0][c] = Mprime[c];
-        M[N-1][(c+1)] = Mprime[N+(c+1)];
-        M[0][(c+1)] = Mprime[(c+1)];
+        M[N-1][c] = TEMP_M[N+c];
+        M[0][c] = TEMP_M[c];
+        M[N-1][(c+1)] = TEMP_M[N+(c+1)];
+        M[0][(c+1)] = TEMP_M[(c+1)];
     }
+
 }
 
 void ConstructRotMat(int16_t topT,int16_t botT, int16_t mat[N][N], int transpose){
@@ -281,10 +272,10 @@ void MatrixRotateRight(int16_t M[N][N], int16_t r[N][N]) {
         CB0[row] = (M[row][N-2] * r[N-2][N-2]) + (M[row][N-1] * r[N-1][N-2]);
         CB1[row] = (M[row][N-2] * r[N-2][N-1]) + (M[row][N-1] * r[N-1][N-1]);
 
-	CT0[row+1] = (M[row+1][0] * r[0][0]) + (M[row+1][1] * r[1][0]);
-	CT1[row+1] = (M[row+1][0] * r[0][1]) + (M[row+1][1] * r[1][1]);
+		CT0[row+1] = (M[row+1][0] * r[0][0]) + (M[row+1][1] * r[1][0]);
+		CT1[row+1] = (M[row+1][0] * r[0][1]) + (M[row+1][1] * r[1][1]);
 
-	CB0[row+1] = (M[row+1][N-2] * r[N-2][N-2]) + (M[row+1][N-1] * r[N-1][N-2]);
+		CB0[row+1] = (M[row+1][N-2] * r[N-2][N-2]) + (M[row+1][N-1] * r[N-1][N-2]);
         CB1[row+1] = (M[row+1][N-2] * r[N-2][N-1]) + (M[row+1][N-1] * r[N-1][N-1]);
     }
     
@@ -295,7 +286,7 @@ void MatrixRotateRight(int16_t M[N][N], int16_t r[N][N]) {
         M[row][N-2] = CB0[row]>>11;
         M[row][N-1] = CB1[row]>>11;
 
-	M[row+1][0] = CT0[row+1]>>11;
+		M[row+1][0] = CT0[row+1]>>11;
         M[row+1][1] = CT1[row+1]>>11;
 
         M[row+1][N-2] = CB0[row+1]>>11;
@@ -361,8 +352,6 @@ void CalcTheta(int16_t a, int16_t b, int16_t c, int16_t d, int16_t *thetaL, int1
 
 int16_t Arctan(int16_t ratio){
     int32_t result = 0;
-    int32_t slowBro = 0x800;
-    int16_t re;
     if((ratio > 0x400) && (ratio <= 0x800)) {
         result = (0x527 * ratio);
         result += 0x123<<11;
@@ -372,14 +361,14 @@ int16_t Arctan(int16_t ratio){
         result = (0x527 * ratio);
         result -= 0x123<<11;
     }
-    re = result >> 11;
-    return re;
+    return result>>11;
 }
 
 int16_t Sin(int16_t theta){
     int32_t xsquared = (theta * theta) >> 11;
     int16_t re = theta;
     int32_t num = (xsquared * theta ) >>11;
+
     re -= (num * 0xAAB) >> 14;
     num = (num * xsquared) >> 11;
     re += (num * 0x444) >> 17;
@@ -394,6 +383,7 @@ int16_t Cos(int16_t theta){
     int32_t xsquared = (theta * theta) >> 11;
     int16_t re = 0x800;
     int32_t num = xsquared;
+
     re -= num >> 1;
     num = (num * xsquared) >> 11;
     re += (num * 0x555) >> 15;
