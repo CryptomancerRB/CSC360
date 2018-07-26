@@ -1,0 +1,237 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 45.40    107.13   107.13                             mcount_internal
+ 15.24    143.09    35.96                             __gnu_mcount_nc
+  5.19    155.34    12.25 37748736     0.00     0.00  MRL1
+  4.51    165.99    10.65                             __aeabi_idiv
+  3.94    175.28     9.29 37748736     0.00     0.00  CalcTheta
+  3.42    183.34     8.06  1048576     0.00     0.00  PerformSVD
+  3.16    190.80     7.46 56623104     0.00     0.00  PermMat
+  3.00    197.87     7.07 37748736     0.00     0.00  ConstructRotMat
+  2.36    203.45     5.58 75497472     0.00     0.00  Cos
+  2.31    208.90     5.45 75497472     0.00     0.00  Sin
+  2.17    214.03     5.13 37748736     0.00     0.00  MatrixRotateLeft
+  2.06    218.88     4.85 37748736     0.00     0.00  MRR1
+  1.97    223.52     4.64 37748736     0.00     0.00  MatrixRotateRight
+  1.70    227.54     4.02 75497472     0.00     0.00  Arctan
+  1.45    230.96     3.42 37748736     0.00     0.00  MRR2
+  1.42    234.32     3.36 37748736     0.00     0.00  MRL2
+  0.62    235.79     1.47 37748736     0.00     0.00  TransposeRotMat
+  0.05    235.91     0.12                             memcpy
+  0.03    235.97     0.06        1     0.06    82.11  main
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2016 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 4 byte(s) for 0.00% of 235.97 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     45.4  107.13    0.00                 mcount_internal [1]
+-----------------------------------------------
+                0.06   82.05       1/1           __libc_start_main [3]
+[2]     34.8    0.06   82.05       1         main [2]
+                8.06   73.99 1048576/1048576     PerformSVD [4]
+-----------------------------------------------
+                                                 <spontaneous>
+[3]     34.8    0.00   82.11                 __libc_start_main [3]
+                0.06   82.05       1/1           main [2]
+-----------------------------------------------
+                8.06   73.99 1048576/1048576     main [2]
+[4]     34.8    8.06   73.99 1048576         PerformSVD [4]
+                5.13   15.61 37748736/37748736     MatrixRotateLeft [6]
+                7.07   11.03 37748736/37748736     ConstructRotMat [7]
+                9.29    4.02 37748736/37748736     CalcTheta [8]
+                4.64    8.27 37748736/37748736     MatrixRotateRight [9]
+                7.46    0.00 56623104/56623104     PermMat [12]
+                1.47    0.00 37748736/37748736     TransposeRotMat [19]
+-----------------------------------------------
+                                                 <spontaneous>
+[5]     15.2   35.96    0.00                 __gnu_mcount_nc [5]
+-----------------------------------------------
+                5.13   15.61 37748736/37748736     PerformSVD [4]
+[6]      8.8    5.13   15.61 37748736         MatrixRotateLeft [6]
+               12.25    0.00 37748736/37748736     MRL1 [10]
+                3.36    0.00 37748736/37748736     MRL2 [18]
+-----------------------------------------------
+                7.07   11.03 37748736/37748736     PerformSVD [4]
+[7]      7.7    7.07   11.03 37748736         ConstructRotMat [7]
+                5.58    0.00 75497472/75497472     Cos [13]
+                5.45    0.00 75497472/75497472     Sin [14]
+-----------------------------------------------
+                9.29    4.02 37748736/37748736     PerformSVD [4]
+[8]      5.6    9.29    4.02 37748736         CalcTheta [8]
+                4.02    0.00 75497472/75497472     Arctan [16]
+-----------------------------------------------
+                4.64    8.27 37748736/37748736     PerformSVD [4]
+[9]      5.5    4.64    8.27 37748736         MatrixRotateRight [9]
+                4.85    0.00 37748736/37748736     MRR1 [15]
+                3.42    0.00 37748736/37748736     MRR2 [17]
+-----------------------------------------------
+               12.25    0.00 37748736/37748736     MatrixRotateLeft [6]
+[10]     5.2   12.25    0.00 37748736         MRL1 [10]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     4.5   10.65    0.00                 __aeabi_idiv [11]
+-----------------------------------------------
+                7.46    0.00 56623104/56623104     PerformSVD [4]
+[12]     3.2    7.46    0.00 56623104         PermMat [12]
+-----------------------------------------------
+                5.58    0.00 75497472/75497472     ConstructRotMat [7]
+[13]     2.4    5.58    0.00 75497472         Cos [13]
+-----------------------------------------------
+                5.45    0.00 75497472/75497472     ConstructRotMat [7]
+[14]     2.3    5.45    0.00 75497472         Sin [14]
+-----------------------------------------------
+                4.85    0.00 37748736/37748736     MatrixRotateRight [9]
+[15]     2.1    4.85    0.00 37748736         MRR1 [15]
+-----------------------------------------------
+                4.02    0.00 75497472/75497472     CalcTheta [8]
+[16]     1.7    4.02    0.00 75497472         Arctan [16]
+-----------------------------------------------
+                3.42    0.00 37748736/37748736     MatrixRotateRight [9]
+[17]     1.4    3.42    0.00 37748736         MRR2 [17]
+-----------------------------------------------
+                3.36    0.00 37748736/37748736     MatrixRotateLeft [6]
+[18]     1.4    3.36    0.00 37748736         MRL2 [18]
+-----------------------------------------------
+                1.47    0.00 37748736/37748736     PerformSVD [4]
+[19]     0.6    1.47    0.00 37748736         TransposeRotMat [19]
+-----------------------------------------------
+                                                 <spontaneous>
+[20]     0.1    0.12    0.00                 memcpy [20]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2016 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [16] Arctan                 [17] MRR2                   [11] __aeabi_idiv
+   [8] CalcTheta               [6] MatrixRotateLeft        [5] __gnu_mcount_nc
+   [7] ConstructRotMat         [9] MatrixRotateRight       [2] main
+  [13] Cos                     [4] PerformSVD              [1] mcount_internal
+  [10] MRL1                   [12] PermMat                [20] memcpy
+  [18] MRL2                   [14] Sin
+  [15] MRR1                   [19] TransposeRotMat
